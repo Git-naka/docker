@@ -17,10 +17,47 @@
     　　　以下のサイトからインストーラを取得する  
        
 　　wsl_update_x64.msi  
-       https://docs.microsoft.com/ja-jp/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package  
-       
-デフォルトでWls2を使用する設定をする  
-![image](https://user-images.githubusercontent.com/115159924/194710730-e2324647-adda-4f10-9b2d-9e7a80a34075.png)
+　　　https://docs.microsoft.com/ja-jp/windows/wsl/install-manual#step-4---download-the-linux-kernel-update-package  
+
+    　　　デフォルトでWls2を使用する設定をする
+
+![image](https://user-images.githubusercontent.com/115159924/194710730-e2324647-adda-4f10-9b2d-9e7a80a34075.png)  
 
 
 ## 2_Docker環境でPostgres(PostGIS)をセットアップ  
+
+docker環境の構築に必要なファイル  
+
+　 docker-compose.yml  
+　 create-tables.sql  
+　 insert-data.sql  
+
+以下のようなフォルダ構成を作成する  
+______________________________________________________________________________________________________________  
+├── docker  
+│   └── db  
+│       └── data（※自動作成のため作成不要）  
+│       └── sql  
+│           ├── create-tables.sql  
+│           └── insert-data.sql  
+├── docker-compose.yml  
+
+______________________________________________________________________________________________________________  
+
+以下のコマンドでコンテナの作成と起動  
+　`docker-compose up -d`  
+
+以下のコマンドでコンテナの中（バッシュ環境）に入る  
+　`docker-compose exec db bash`  
+
+以下のコマンドでテスト用仮テーブルと仮データを作成する  
+　`psql -U docker -d postgre < "/docker-entrypoint-initdb.d/create-tables.sql"`  
+　`psql -U docker -d postgre < "/docker-entrypoint-initdb.d/insert-data.sql"`  
+
+以下のコマンドでpostgresに入り、postgisが適用されているか確認する  
+　`psql -U docker -d postgre`  
+　`\dx`  
+
+以下のコマンドでテスト用仮テーブルを表示できるか確認する  
+　`select * from test_table;`  
+
